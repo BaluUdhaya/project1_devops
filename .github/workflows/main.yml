@@ -1,0 +1,31 @@
+name: jenkis_int
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  myfirstjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkoutcode
+        uses: actions/checkout@v5
+      - name: shellscript
+        run: echo "hello my first integration"
+      - name: set up java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+      - name: connect to lab server
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+            host: "3.110.111.224"
+            user: labuser
+            pass: Nuvelabs123$
+            port: 22
+            connect_timeout: 10s
+            first_ssh: |
+                curl -l -u admin:Root123$ http://localhost:8080/job/project1_devops/build?token=balu
+            last_ssh: |
+                cd ./target && ls -l
+      
